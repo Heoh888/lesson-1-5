@@ -1,16 +1,4 @@
-//1. Создать протокол «Car» и описать свойства, общие для автомобилей, а также метод действия.
-//
-//2. Создать расширения для протокола «Car» и реализовать в них методы конкретных действий с автомобилем: открыть/закрыть окно, запустить/заглушить двигатель и т.д. (по одному методу на действие, реализовывать следует только те действия, реализация которых общая для всех автомобилей).
-//
-//3. Создать два класса, имплементирующих протокол «Car» - trunkCar и sportСar. Описать в них свойства, отличающиеся для спортивного автомобиля и цистерны.
-//
-//4. Для каждого класса написать расширение, имплементирующее протокол CustomStringConvertible.
-//
-//5. Создать несколько объектов каждого класса. Применить к ним различные действия.
-//
-//6. Вывести сами объекты в консоль.
 
-// Основной протокол для все класов
 enum GetInTheCar: String {
     case sit = "Вы сели в машину"
     case goOut = "Вы вышли из машины"
@@ -26,6 +14,7 @@ enum EngineStatus {
     case muted
 }
 
+// Основной протокол для все классов
 protocol Car {
     var year: Int { get };
     var color: String { get };
@@ -37,26 +26,26 @@ protocol Car {
 
 // расширение для протокола Car
 extension Car {
-    var windows : ActivateWindows {return self as! ActivateWindows}
-    var engine : EngineStatus {return self as! EngineStatus}
+    var windows: ActivateWindows { return self as! ActivateWindows }
+    var engine: EngineStatus { return self as! EngineStatus }
     
-    func activateWindows(windows: ActivateWindows) -> String{
+    func activateWindows(windows: ActivateWindows) -> String {
         var status: String = ""
-        if windows == .open{
+        if windows == .open {
             status = "Окна открыты"
         }
-        if windows == .close{
+        if windows == .close {
             status = "Окна закрыты"
         }
         return status
     }
     
-    func  engineStatus(engine: EngineStatus) -> String{
+    func engineStatus(engine: EngineStatus) -> String {
         var status: String = ""
-        if engine == .started{
+        if engine == .started {
             status = "Двигатель заведен"
         }
-        if engine == .muted{
+        if engine == .muted {
             status = "Двигатель заглушен"
         }
         return status
@@ -64,18 +53,18 @@ extension Car {
 }
 
 // класс TrunkCar
-class TrunkCar: Car  {
+class TrunkCar: Car {
     var year: Int
     var color: String
     var weight: Double
     var getCar: GetInTheCar
     var bodyVolume: Int
 
-    func getInTheCar(getCar: GetInTheCar){
+    func getInTheCar(getCar: GetInTheCar) {
         self.getCar = getCar
     }
     
-    init(year: Int, color: String, weight: Double, getCar: GetInTheCar, bodyVolume: Int ) {
+    init(year: Int, color: String, weight: Double, getCar: GetInTheCar, bodyVolume: Int) {
         self.year = year
         self.color = color
         self.weight = weight
@@ -84,38 +73,32 @@ class TrunkCar: Car  {
     }
 }
 
-// расширение для класса TrunkCar
-extension TrunkCar: CustomStringConvertible{
+// расширение для класса TrunkCar: CustomStringConvertible
+extension TrunkCar: CustomStringConvertible {
     var description: String {
         return "Год: \(year), Цвет:\(color), Вес:\(weight) кг., Объем кузова\(bodyVolume) м³, \(getCar.rawValue),"
     }
 }
 
 // класс SportСar
-class SportСar: Car  {
+class SportСar: Car {
     var year: Int
     var color: String
     var weight: Double
     var getCar: GetInTheCar
     var enginePower: Double
-
-    func getInTheCar(getCar: GetInTheCar){
+    
+    func getInTheCar(getCar: GetInTheCar) {
         self.getCar = getCar
     }
     
     // Функция определения разгона от 0 до 100 км
-    func overclockingTime() -> String{
+    func overclockingTime() -> String {
         let time = (weight/enginePower*100).rounded()/100
-        var messages: String = ""
-        if engineStatus(engine: .started) == "Двигатель заведен"{
-            messages = "Разгон от 0 до 100 км за \(time) секунд."
-        }else if engineStatus(engine: .muted) == "Двигатель заглушен" {
-            messages = "Заведите машину!"
-        }
-        return messages
+        return "Разгон от 0 до 100 км за \(time) секунды."
     }
     
-    init(year: Int, color: String, weight: Double, getCar: GetInTheCar, enginePower: Double ) {
+    init(year: Int, color: String, weight: Double, getCar: GetInTheCar, enginePower: Double) {
         self.year = year
         self.color = color
         self.weight = weight
@@ -124,25 +107,31 @@ class SportСar: Car  {
     }
 }
 
-// расширение для класса TrunkCar
-extension SportСar: CustomStringConvertible{
+// расширение для класса SportСar: CustomStringConvertible
+extension SportСar: CustomStringConvertible {
     var description: String {
         return "Год: \(year), Цвет:\(color), Вес:\(weight) кг., Мощность двигателя \(enginePower) л.с., \(getCar.rawValue), \(overclockingTime())"
     }
 }
-
+// Иницилизируем экземпляры
 var volvo = TrunkCar( year: 2017, color: "Белый", weight: 7550, getCar: .goOut, bodyVolume: 75)
 volvo.getInTheCar(getCar: .sit)
+
 var kamaz = TrunkCar( year: 2019, color: "Черный", weight: 6180, getCar: .goOut, bodyVolume: 40)
-kamaz.getInTheCar(getCar: .goOut)
+//kamaz.getInTheCar(getCar: .sit)
 
-var Lotus = SportСar( year: 2017, color: "Белый", weight: 1750, getCar: .sit, enginePower: 445)
+var lotus = SportСar( year: 2017, color: "Желтый", weight: 1750, getCar: .goOut, enginePower: 445)
+lotus.getInTheCar(getCar: .sit)
+
+var ferrari = SportСar( year: 2020, color: "Красный", weight: 1600, getCar: .goOut, enginePower: 525)
+//lotus.getInTheCar(getCar: .sit)
 
 
-
+// Выведем в консоль
 print(volvo, volvo.activateWindows(windows: .open), volvo.engineStatus(engine: .started))
 print(kamaz, kamaz.activateWindows(windows: .close), kamaz.engineStatus(engine: .muted))
 
-print(Lotus, Lotus.activateWindows(windows: .open), Lotus.engineStatus(engine: .started))
+print(lotus, lotus.activateWindows(windows: .open), lotus.engineStatus(engine: .started))
+print(ferrari, ferrari.activateWindows(windows: .close), ferrari.engineStatus(engine: .muted))
 
 
